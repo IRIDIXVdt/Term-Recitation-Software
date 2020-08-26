@@ -1,0 +1,370 @@
+object Form1: TForm1
+  Left = 235
+  Top = 115
+  AlphaBlend = True
+  AlphaBlendValue = 245
+  BorderStyle = bsToolWindow
+  BorderWidth = 10
+  Caption = 'WRS v0.1'
+  ClientHeight = 811
+  ClientWidth = 1616
+  Color = clSilver
+  Font.Charset = GB2312_CHARSET
+  Font.Color = clAqua
+  Font.Height = -35
+  Font.Name = #31561#32447
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 36
+  object Label1: TLabel
+    Left = 760
+    Top = -24
+    Width = 210
+    Height = 36
+    Cursor = crHandPoint
+    Hint = 'Save Progress and Exit'
+    Caption = #20445#23384#28982#21518#36864#20986
+    Color = clBackground
+    ParentColor = False
+    OnClick = Label1Click
+  end
+  object Label2: TLabel
+    Left = 96
+    Top = -24
+    Width = 70
+    Height = 36
+    Cursor = crHandPoint
+    Caption = #22797#20064
+    Color = clDefault
+    ParentColor = False
+    OnClick = Label2Click
+  end
+  object Label4: TLabel
+    Left = 216
+    Top = -24
+    Width = 140
+    Height = 36
+    Cursor = crHandPoint
+    Caption = #24405#20837#21333#35789
+    Color = clBackground
+    ParentColor = False
+    OnClick = Label4Click
+  end
+  object Label6: TLabel
+    Left = 400
+    Top = -24
+    Width = 70
+    Height = 36
+    Cursor = crHandPoint
+    Caption = #36873#35789
+    Color = clBackground
+    ParentColor = False
+    OnClick = Label6Click
+  end
+  object Label7: TLabel
+    Left = 520
+    Top = -24
+    Width = 70
+    Height = 36
+    Cursor = crHandPoint
+    Caption = #35774#32622
+    Color = clBackground
+    ParentColor = False
+    OnClick = Label7Click
+  end
+  object Panel1: TPanel
+    Left = 8
+    Top = 16
+    Width = 153
+    Height = 153
+    Alignment = taLeftJustify
+    BevelOuter = bvNone
+    Color = clBlack
+    TabOrder = 0
+    object Label5: TLabel
+      Left = 120
+      Top = 385
+      Width = 128
+      Height = 67
+      Caption = #35748#35782
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -64
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label3: TLabel
+      Left = 593
+      Top = 380
+      Width = 128
+      Height = 67
+      Caption = #24536#35760
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clLime
+      Font.Height = -64
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label8: TLabel
+      Left = 410
+      Top = 48
+      Width = 98
+      Height = 36
+      Alignment = taCenter
+      Caption = 'Label8'
+    end
+    object Label9: TLabel
+      Left = 88
+      Top = 136
+      Width = 98
+      Height = 36
+      Caption = 'Label9'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label10: TLabel
+      Left = 88
+      Top = 200
+      Width = 116
+      Height = 36
+      Caption = 'Label10'
+    end
+  end
+  object Panel2: TPanel
+    Left = 192
+    Top = 32
+    Width = 873
+    Height = 601
+    Color = clBackground
+    TabOrder = 1
+    object Label11: TLabel
+      Left = 72
+      Top = 32
+      Width = 140
+      Height = 36
+      Caption = #28155#21152#21333#35789
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Edit1: TEdit
+      Left = 72
+      Top = 88
+      Width = 329
+      Height = 35
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -24
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      Text = 'Term'
+    end
+    object Edit2: TEdit
+      Left = 72
+      Top = 144
+      Width = 329
+      Height = 35
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -24
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      Text = 'Definition'
+    end
+    object RichEdit1: TRichEdit
+      Left = 72
+      Top = 200
+      Width = 585
+      Height = 153
+      BorderStyle = bsNone
+      Color = clWindowFrame
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clAqua
+      Font.Height = -24
+      Font.Name = 'Arial'
+      Font.Style = []
+      Lines.Strings = (
+        'RichEdit1')
+      ParentFont = False
+      TabOrder = 2
+    end
+  end
+  object Panel3: TPanel
+    Left = 8
+    Top = 520
+    Width = 153
+    Height = 153
+    Alignment = taLeftJustify
+    BevelOuter = bvNone
+    Color = clBlack
+    TabOrder = 2
+    object Label14: TLabel
+      Left = 74
+      Top = 32
+      Width = 140
+      Height = 36
+      Alignment = taCenter
+      Caption = #36873#25321#21333#35789
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label16: TLabel
+      Left = 546
+      Top = 400
+      Width = 140
+      Height = 36
+      Alignment = taCenter
+      Caption = #38543#26426#36873#25321
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label17: TLabel
+      Left = 546
+      Top = 456
+      Width = 140
+      Height = 36
+      Alignment = taCenter
+      Caption = #28155#21152#24050#36873
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object DBGrid1: TDBGrid
+      Left = 64
+      Top = 96
+      Width = 433
+      Height = 417
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      DataSource = DataSource1
+      FixedColor = clMenuText
+      TabOrder = 0
+      TitleFont.Charset = GB2312_CHARSET
+      TitleFont.Color = clAqua
+      TitleFont.Height = -35
+      TitleFont.Name = #31561#32447
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'date'
+          Visible = True
+        end>
+    end
+  end
+  object Panel4: TPanel
+    Left = 8
+    Top = 352
+    Width = 153
+    Height = 153
+    Alignment = taLeftJustify
+    BevelOuter = bvNone
+    Color = clBlack
+    TabOrder = 3
+    object Label15: TLabel
+      Left = 410
+      Top = 48
+      Width = 70
+      Height = 36
+      Alignment = taCenter
+      Caption = #35774#32622
+    end
+    object Label12: TLabel
+      Left = 528
+      Top = 416
+      Width = 70
+      Height = 36
+      Cursor = crHandPoint
+      Caption = #30830#23450
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+      OnClick = Label12Click
+    end
+    object Label13: TLabel
+      Left = 88
+      Top = 136
+      Width = 210
+      Height = 36
+      Cursor = crHandPoint
+      Caption = #27599#26085#22797#20064#25968#37327
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Edit3: TEdit
+      Left = 472
+      Top = 136
+      Width = 89
+      Height = 35
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      TabOrder = 0
+      Text = '50'
+    end
+  end
+  object ZConnection1: TZConnection
+    ControlsCodePage = cGET_ACP
+    UTF8StringsAsWideField = False
+    AutoEncodeStrings = False
+    AutoCommit = False
+    Connected = True
+    HostName = '127.0.0.1'
+    Port = 3306
+    Database = 'Terms'
+    User = 'root'
+    Password = 'sirisoak'
+    Protocol = 'mysqld-5'
+    LibraryLocation = 'D:\DelphiLarry\00 Delphi Memo\libmysql_5.dll'
+    Left = 8
+    Top = 688
+  end
+  object ZTable1: TZTable
+    Connection = ZConnection1
+    Active = True
+    TableName = 'test'
+    Left = 48
+    Top = 688
+  end
+  object DataSource1: TDataSource
+    DataSet = ZTable1
+    Left = 88
+    Top = 688
+  end
+end

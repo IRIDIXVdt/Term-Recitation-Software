@@ -53,9 +53,7 @@ begin
   FFileName:= ChangeFileExt (Application.Exename, '.log');
  // FLogOpened := False;
   FCsWriteLogFile := TCriticalSection.Create;
-
   FileHandle:=FileOpen('Default.log', fmOpenWrite);
-  //ShowMessage(r
   if(FileHandle>=0)then FileSeek(FileSeek(FileHandle,0,2),0,0)
   else FileHandle:=  FileOpen('Default.log', fmOpenWrite);
   

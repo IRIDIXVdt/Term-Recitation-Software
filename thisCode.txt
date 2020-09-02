@@ -1,0 +1,48 @@
+Try
+  ZConnection1.StartTransaction;
+  //ZConnection1.PrepareTransaction('insert into testguy(?,?)');
+  Try
+    ZQuery1.Close;
+    ZQuery1.SQL.Text:='Select * From test01';
+    ZQuery1.Active:=True;
+
+    ZQuery2.Close;
+    ZQuery2.SQL.Text:='Update test01 set date = date_add(date, interval 1 day) where id = 1;';
+    Zquery2.ExecSQL;
+    ZQuery2.Close;
+    ZQuery2.SQL.Text:='Select * From test01';
+    ZQuery2.Active:=True;
+
+    ZConnection1.Commit;
+    Edit1.Text:=DBGrid2.DataSource.DataSet.FieldByName('date').AsString;
+    {
+    ZQuery1.Close;
+    ZQuery1.SQL.Text:='Select * From employees';
+    ZQuery1.Active:=True;
+    //ShowMessage('Middle Reached!');
+    ZQuery2.Close;
+   // ZQuery2.SQL.Text:='Update employees Set email = ''default03'' where employee_id = 100;';//
+    ZQuery2.SQL.Text:='Update employees set salary = salary + 150 where employee_id = 100';
+    Zquery2.ExecSQL;
+    ZQuery2.Close;
+    
+   // ZQuery2.SQL.Text:='Update employeese employee_id = 101';
+   // Zquery2.ExecSQL;
+   // ZQuery2.Close;
+   // raise Exception.Create('“Ï≥£');
+    ZQuery2.SQL.Text:='Update employees set salary = salary - 150 where employee_id = 101';
+    Zquery2.ExecSQL;
+    ZQuery2.Close;
+    ZQuery2.SQL.Text:='Select * From employees WHERE employee_id = 103' ;
+    ZQuery2.Active:=True;
+
+    ZConnection1.Commit;
+    Edit1.Text:=DBGrid2.DataSource.DataSet.FieldByName('hiredate').AsString;
+    }
+  Except
+    ZConnection1.Rollback;
+    ShowMessage('Exception caught! Process rolling back.');
+  end;
+Finally
+  //ZConnection1.AutoCommit:=True;
+end;

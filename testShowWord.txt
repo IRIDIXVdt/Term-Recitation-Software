@@ -1,0 +1,18 @@
+Word(Temp){
+Date:=2020/08/25;
+Level:=0;
+Def:=测试;
+Sample:=这是一个测试语句
+This is a sample sentence.
+这是第二个测试语句
+This is the second test sentence.
+};
+Word(Temp){
+Date:=2020/08/25;
+Level:=0;
+Def:=测试;
+Sample:=这是一个测试语句
+This is a sample sentence.
+这是第二个测试语句
+This is the second test sentence.
+};

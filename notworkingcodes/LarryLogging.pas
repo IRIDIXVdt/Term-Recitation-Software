@@ -53,9 +53,7 @@ begin
   FFileName:= ChangeFileExt (Application.Exename, '.log');
  // FLogOpened := False;
   FCsWriteLogFile := TCriticalSection.Create;
-
   FileHandle:=FileOpen('Default.log', fmOpenWrite);
-  //ShowMessage(r
   if(FileHandle>=0)then FileSeek(FileSeek(FileHandle,0,2),0,0)
   else FileHandle:=  FileOpen('Default.log', fmOpenWrite);
   
@@ -88,8 +86,7 @@ begin
   FCsWriteLogFile.Enter();//enter critical area
   try
     //AppendStr(StringBuff, DateTimeToStr (Now)+ ', ' + Application.Exename + ' : ' + str + #13#10);
-    //StringBuff:=StringBuff + DateTimeToStr (Now)+ ', ' + Application.Exename + ' : ' + str + #13#10;
-    StringBuff:=StringBuff+str;
+    StringBuff:=StringBuff + DateTimeToStr (Now)+ ', ' + Application.Exename + ' : ' + str + #13#10;
     if(length(StringBuff)>1000)then
       begin
       tmpPChar := PWideChar(StringBuff);

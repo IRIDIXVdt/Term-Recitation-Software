@@ -1,13 +1,13 @@
 object Form1: TForm1
-  Left = 347
-  Top = 138
+  Left = 180
+  Top = 151
   AlphaBlend = True
   AlphaBlendValue = 245
   BorderStyle = bsToolWindow
   BorderWidth = 10
   Caption = 'WRS v0.1'
-  ClientHeight = 773
-  ClientWidth = 1240
+  ClientHeight = 757
+  ClientWidth = 1184
   Color = clSilver
   Font.Charset = GB2312_CHARSET
   Font.Color = clAqua
@@ -78,8 +78,8 @@ object Form1: TForm1
   object Panel1: TPanel
     Left = 208
     Top = 88
-    Width = 889
-    Height = 505
+    Width = 897
+    Height = 561
     Alignment = taLeftJustify
     BevelOuter = bvNone
     Color = clBlack
@@ -89,6 +89,7 @@ object Form1: TForm1
       Top = 441
       Width = 128
       Height = 67
+      Cursor = crHandPoint
       Caption = #35748#35782
       Font.Charset = ANSI_CHARSET
       Font.Color = clAqua
@@ -96,12 +97,14 @@ object Form1: TForm1
       Font.Name = #31561#32447
       Font.Style = []
       ParentFont = False
+      OnClick = Label5Click
     end
     object Label3: TLabel
       Left = 537
       Top = 436
       Width = 128
       Height = 67
+      Cursor = crHandPoint
       Caption = #24536#35760
       Font.Charset = ANSI_CHARSET
       Font.Color = clLime
@@ -109,9 +112,10 @@ object Form1: TForm1
       Font.Name = #31561#32447
       Font.Style = []
       ParentFont = False
+      OnClick = Label3Click
     end
     object Label8: TLabel
-      Left = 410
+      Left = 378
       Top = 48
       Width = 98
       Height = 36
@@ -144,13 +148,46 @@ object Form1: TForm1
       Font.Style = []
       ParentFont = False
     end
-    object Edit7: TEdit
-      Left = 592
-      Top = 144
-      Width = 121
-      Height = 44
-      TabOrder = 0
-      Text = 'Edit7'
+    object TermInfoOutput: TLabel
+      Left = 616
+      Top = 48
+      Width = 89
+      Height = 14
+      Caption = 'TermInfoOutput'
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clAqua
+      Font.Height = -13
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object ErrorMessage: TLabel
+      Left = 616
+      Top = 0
+      Width = 90
+      Height = 15
+      Caption = 'ErrorMessage'
+      Font.Charset = GB2312_CHARSET
+      Font.Color = clAqua
+      Font.Height = -15
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label19: TLabel
+      Left = 216
+      Top = 249
+      Width = 384
+      Height = 67
+      Cursor = crHandPoint
+      Caption = #28857#20987#26174#31034#35299#37322
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -64
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+      OnClick = Label19Click
     end
   end
   object Panel2: TPanel
@@ -357,9 +394,9 @@ object Form1: TForm1
   end
   object Panel4: TPanel
     Left = 8
-    Top = 344
+    Top = 352
     Width = 153
-    Height = 161
+    Height = 153
     Alignment = taLeftJustify
     BevelOuter = bvNone
     Color = clBlack
@@ -393,7 +430,7 @@ object Form1: TForm1
       Width = 210
       Height = 36
       Cursor = crHandPoint
-      Caption = #27599#26085#22797#20064#25968#37327
+      Caption = #26032#28155#21333#35789#25968#37327
       Font.Charset = ANSI_CHARSET
       Font.Color = clAqua
       Font.Height = -35

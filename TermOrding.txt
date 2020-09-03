@@ -1,0 +1,347 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    Edit1: TEdit;
+    Edit2: TEdit;
+    AddTerm: TButton;
+    Label1: TLabel;
+    ShuffleTerm: TButton;
+    RemoveFirst: TButton;
+    RememberTerm: TButton;
+    RandomTerm: TButton;
+    ForgetTerm: TButton;
+    Button2: TButton;
+    ErrorMessage: TLabel;
+    Label3: TLabel;
+    Edit3: TEdit;
+    AddIndex: TButton;
+    Start: TButton;
+    procedure AddTermClick(Sender: TObject);
+    procedure RandomTermClick(Sender: TObject);
+    procedure RemoveFirstClick(Sender: TObject);
+    procedure AddIndexClick(Sender: TObject);
+    procedure ShuffleTermClick(Sender: TObject);
+    procedure StartClick(Sender: TObject);
+    procedure RememberTermClick(Sender: TObject);
+    procedure ForgetTermClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+  
+  Term = record //declaring the node's data field
+    ID:  Integer;
+    Level: Integer;
+  end;
+
+  NodePointer = ^Node;
+  Node = record //we declare the type of node here
+    data : Term;
+    nextPointer : NodePointer;
+  end;
+
+var
+  Form1: TForm1;
+  TermList: NodePointer;
+implementation
+
+{$R *.dfm}
+procedure sysout(sentence : String);
+begin
+  Form1.Label1.Caption := Form1.Label1.Caption + #13 + sentence;
+end;
+
+procedure display();//sampleList: NodePointer
+var
+  currentNode : NodePointer;
+begin
+  Form1.Label1.Caption:='';
+  sysout(Format( '%-20s %-20s' + #13,['ID','Level']));
+  currentNode := TermList;
+  if(currentNode = NIL) then
+  begin
+    sysout('List empty, nothing to display');
+  end;
+  while(currentNode <> NIL) do
+  begin
+    sysout(Format( '%-20s %-20s;'
+    ,[IntToStr(currentNode^.data.ID),IntToStr(currentNode^.data.Level)]));
+   currentNode := currentNode^.nextPointer;
+  end;//end of while-do
+end;//end of the procedure
+
+function getLength() : Integer;//return length of array
+var
+current:NodePointer;
+length:Integer;
+begin
+current:= TermList;
+length:=1;
+while(current^.nextPointer<>NIL)do
+  begin
+    current:=current^.nextPointer;
+    length:= length+1;
+  end;
+Result := length;
+end;
+
+function remove (nodeIndex : Integer): nodePointer;overload;
+//it's almost always going to be called by swap()
+//so assume index won't cause exceptions
+var
+prevNode : NodePointer;
+temp : NodePointer;
+isFound : boolean;
+i: Integer;
+begin
+  Form1.ErrorMessage.Caption:=#13 + 'Removing Index ' + IntToStr(nodeIndex) + '...';
+  Form1.ErrorMessage.Caption := Form1.ErrorMessage.Caption+#13+'Deleting instance found';
+  if(nodeIndex=1) then //prevNode = NIL, so the first item is the string
+    begin
+    temp:=TermList;
+    TermList:=TermList^.nextPointer;
+    end
+  else    //the item is somewhere in the linkedlist
+    begin
+    prevNode:=TermList;
+    if prevNode = nil then exit;
+    for i := 1 to nodeIndex-2 do
+      begin
+        prevNode:=prevNode^.nextPointer;
+      end;
+      temp := prevNode^.nextPointer;
+      prevNode^.nextPointer := temp^.nextPointer;
+      temp^.nextPointer:=NIL;
+    end;
+  display;
+  Result:=temp;
+end;
+
+procedure createNewList();//create form with null
+begin//var sampleList : NodePointer
+  //sampleList := NIL;
+  New(TermList);
+  TermList := NIL;
+end;
+
+procedure add (newNode : NodePointer);overload;//var sampleList : NodePointer;
+var
+  currentNode : NodePointer;
+  prevNode : NodePointer;
+begin
+  if(TermList = NIL) then
+    begin
+      TermList := newNode;
+      TermList^.nextPointer := NIL;
+    end
+  else
+    begin
+      currentNode := TermList;
+      while(currentNode <> NIL) do
+      begin
+        prevNode := currentNode;
+        currentNode := currentNode^.nextPointer;
+      end;//end of traversal
+      prevNode^.nextPointer := newNode;
+      newNode^.nextPointer := NIL;
+    end;//end of case where list is not empty
+    display();
+end;//end of procedure add
+
+procedure add(index : Integer; newNode : NodePointer); overload;
+var
+i:Integer;
+prevNode,currentNode:NodePointer;
+indexFound:Boolean;
+begin
+  if(index>=0)then         //and numberValid(IntToStr(index))
+  begin
+  //-----------//
+  indexFound := true;
+  if(TermList = NIL) then
+  begin
+    add(NewNode);
+  end
+  else if(index = 1)  then
+    begin
+    newNode^.nextPointer:=TermList;
+    TermList:=newNode;
+    Form1.ErrorMessage.Caption:= #13 + 'add successful at first';
+    end
+  else if(TermList^.nextPointer = NIL) then
+    begin
+    Form1.ErrorMessage.Caption:='Error, no such index, adding to the end';
+    Add(newNode);
+    end
+  else
+    begin
+      prevNode := TermList;
+      currentNode := TermList^.nextPointer;
+      for i:=1 to index-2 do
+      begin
+        if(currentNode^.nextPointer <> NIL) then
+          begin
+            prevNode := currentNode;
+            currentNode := currentNode^.nextPointer;
+          end
+        else
+          begin
+            Form1.ErrorMessage.Caption:='Error, no such index, adding to the end';
+            indexFound := false;
+            add(newNode);
+            break;
+          end;
+      end;
+      //we arrive at the target position now
+      if(indexFound) then
+        begin
+          prevNode^.nextPointer:=newNode;
+          newNode^.nextPointer:=currentNode;
+          Form1.ErrorMessage.Caption:= 'add successful at index' + IntToStr(index);
+        end;
+  end;
+  end
+  else
+    begin
+    Form1.ErrorMessage.Caption:=#13 + 'invalid index for addition or swapping';
+    end;
+  display();
+end;
+
+
+
+procedure move(One : Integer; Two : Integer); //move element index 2 to index 1
+var
+temp: Integer;
+tempNode:NodePointer;
+begin
+tempNode := remove(Two);
+tempNode^.nextPointer:=NIL;
+add(One,tempNode);
+
+display;
+end;
+
+procedure swap(One: Integer; Two: Integer);  //swap element index 1 and 2
+begin
+  if(Two>One)then
+  begin
+    move(One,Two);
+    move(Two,One+1);
+    Form1.ErrorMessage.Caption:=#13+'swap successful';
+  end;
+end;
+
+procedure shuffle();
+var
+length:Integer;
+i: Integer;
+begin
+length:=getLength();
+//ShowMessage('length is ' + IntToStr(length));
+for i:=0 to  length*2 do
+  begin
+  swap(random(length),random(length));
+  end;
+end;
+
+
+
+//-------------------------------------------------------
+procedure TForm1.AddTermClick(Sender: TObject);
+var
+NewTerm : NodePointer;
+begin
+  New(NewTerm);
+  NewTerm^.data.ID:=StrToInt(Edit1.Text);
+  NewTerm^.data.Level:=StrToInt(Edit2.Text);
+  Add(NewTerm);
+end;
+
+procedure TForm1.RandomTermClick(Sender: TObject);
+var
+NewTerm : NodePointer;
+begin
+  New(NewTerm);
+  NewTerm^.data.ID:=Random(100);
+  NewTerm^.data.Level:=Random(5);
+  Add(NewTerm);
+end;
+
+procedure TForm1.RemoveFirstClick(Sender: TObject);
+begin
+remove(1);
+end;
+
+procedure TForm1.AddIndexClick(Sender: TObject);
+var
+NewTerm : NodePointer;
+begin
+  New(NewTerm);
+  NewTerm^.data.ID:=StrToInt(Edit1.Text);
+  NewTerm^.data.Level:=StrToInt(Edit2.Text);
+  Add(StrToInt(Edit3.Text),NewTerm);
+end;
+
+procedure TForm1.ShuffleTermClick(Sender: TObject);
+begin
+Shuffle();
+end;
+
+procedure TForm1.StartClick(Sender: TObject);
+begin
+if(TermList<>NIL)then
+Label3.Caption:=IntToStr(TermList^.data.ID)
+else
+Label3.Caption:=('Nothing in list, start by inserting terms');
+end;
+
+procedure TForm1.RememberTermClick(Sender: TObject);
+var
+newTerm:NodePointer;
+index: Integer;
+begin
+if(TermList<>NIL) then
+  begin
+  case TermList^.data.Level of
+    0: index:=4;
+    1: index:=6;
+    2: index:=8;
+    else index:=0;
+    end;
+    if(index=0)then
+      Remove(1)
+    else
+      begin
+      New(NewTerm);
+      NewTerm^.data.ID:=TermList^.data.ID;
+      NewTerm^.data.Level:=TermList^.data.Level+1;
+      Remove(1);
+      Add(index,NewTerm);
+      end;
+  end;
+end;
+
+procedure TForm1.ForgetTermClick(Sender: TObject);
+var
+newTerm:NodePointer;
+begin
+if(TermList<>NIL)then
+  begin
+    New(NewTerm);
+    NewTerm^.data.ID:=TermList^.data.ID;
+    NewTerm^.data.Level:=0;
+    Remove(1);
+    Add(4,NewTerm);
+  end;
+end;
+
+end.

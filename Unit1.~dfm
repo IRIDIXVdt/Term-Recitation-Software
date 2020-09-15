@@ -1,11 +1,11 @@
 object Form1: TForm1
-  Left = 180
-  Top = 151
+  Left = 422
+  Top = 240
   AlphaBlend = True
   AlphaBlendValue = 245
-  BorderStyle = bsToolWindow
+  BorderStyle = bsNone
   BorderWidth = 10
-  Caption = 'WRS v0.1'
+  Caption = 'WRS v0.2'
   ClientHeight = 757
   ClientWidth = 1184
   Color = clSilver
@@ -17,11 +17,13 @@ object Form1: TForm1
   OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyPress = FormKeyPress
+  OnMouseMove = FormMouseMove
   PixelsPerInch = 96
   TextHeight = 36
-  object Label1: TLabel
+  object SaveAndExit: TLabel
     Left = 760
-    Top = -24
+    Top = 8
     Width = 210
     Height = 36
     Cursor = crHandPoint
@@ -29,11 +31,11 @@ object Form1: TForm1
     Caption = #20445#23384#28982#21518#36864#20986
     Color = clBackground
     ParentColor = False
-    OnClick = Label1Click
+    OnClick = SaveAndExitClick
   end
   object Label2: TLabel
     Left = 96
-    Top = -24
+    Top = 8
     Width = 70
     Height = 36
     Cursor = crHandPoint
@@ -43,8 +45,8 @@ object Form1: TForm1
     OnClick = Label2Click
   end
   object Label4: TLabel
-    Left = 216
-    Top = -24
+    Left = 200
+    Top = 8
     Width = 140
     Height = 36
     Cursor = crHandPoint
@@ -53,20 +55,20 @@ object Form1: TForm1
     ParentColor = False
     OnClick = Label4Click
   end
-  object Label6: TLabel
-    Left = 400
-    Top = -24
+  object FormChooseTerm: TLabel
+    Left = 552
+    Top = 8
     Width = 70
     Height = 36
     Cursor = crHandPoint
     Caption = #36873#35789
     Color = clBackground
     ParentColor = False
-    OnClick = Label6Click
+    OnClick = FormChooseTermClick
   end
   object Label7: TLabel
-    Left = 520
-    Top = -24
+    Left = 656
+    Top = 8
     Width = 70
     Height = 36
     Cursor = crHandPoint
@@ -75,17 +77,28 @@ object Form1: TForm1
     ParentColor = False
     OnClick = Label7Click
   end
+  object Label9: TLabel
+    Left = 376
+    Top = 8
+    Width = 140
+    Height = 36
+    Cursor = crHandPoint
+    Caption = #28155#21152#27880#37322
+    Color = clBackground
+    ParentColor = False
+    OnClick = Label9Click
+  end
   object Panel1: TPanel
-    Left = 208
-    Top = 88
-    Width = 897
-    Height = 561
+    Left = 432
+    Top = 136
+    Width = 713
+    Height = 545
     Alignment = taLeftJustify
     BevelOuter = bvNone
     Color = clBlack
     TabOrder = 0
     object Label5: TLabel
-      Left = 120
+      Left = 288
       Top = 441
       Width = 128
       Height = 67
@@ -122,34 +135,8 @@ object Form1: TForm1
       Alignment = taCenter
       Caption = 'Label8'
     end
-    object Label9: TLabel
-      Left = 88
-      Top = 136
-      Width = 98
-      Height = 36
-      Caption = 'Label9'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clAqua
-      Font.Height = -35
-      Font.Name = #31561#32447
-      Font.Style = []
-      ParentFont = False
-    end
-    object Label10: TLabel
-      Left = 88
-      Top = 200
-      Width = 51
-      Height = 15
-      Caption = 'Label10'
-      Font.Charset = GB2312_CHARSET
-      Font.Color = clAqua
-      Font.Height = -15
-      Font.Name = #31561#32447
-      Font.Style = []
-      ParentFont = False
-    end
     object TermInfoOutput: TLabel
-      Left = 616
+      Left = 752
       Top = 48
       Width = 89
       Height = 14
@@ -162,7 +149,7 @@ object Form1: TForm1
       ParentFont = False
     end
     object ErrorMessage: TLabel
-      Left = 616
+      Left = 752
       Top = 0
       Width = 90
       Height = 15
@@ -189,12 +176,68 @@ object Form1: TForm1
       ParentFont = False
       OnClick = Label19Click
     end
+    object TestDef: TTntLabel
+      Left = 192
+      Top = 120
+      Width = 80
+      Height = 27
+      Caption = 'TestDef'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -24
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object TestPos: TTntLabel
+      Left = 50
+      Top = 120
+      Width = 107
+      Height = 27
+      Alignment = taRightJustify
+      Caption = 'TntLabel2'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -24
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object TestSen: TTntLabel
+      Left = 192
+      Top = 232
+      Width = 71
+      Height = 23
+      Caption = 'TestSen'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -20
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label22: TLabel
+      Left = 72
+      Top = 441
+      Width = 128
+      Height = 67
+      Cursor = crHandPoint
+      Caption = #29087#30693
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clTeal
+      Font.Height = -64
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+      OnClick = Label22Click
+    end
   end
   object Panel2: TPanel
     Left = 8
-    Top = 184
+    Top = 520
     Width = 153
     Height = 153
+    BevelOuter = bvNone
     Color = clBackground
     TabOrder = 1
     object Label11: TLabel
@@ -210,24 +253,129 @@ object Form1: TForm1
       Font.Style = []
       ParentFont = False
     end
-    object Label18: TLabel
-      Left = 592
-      Top = 376
-      Width = 70
+    object SingleInsert: TLabel
+      Left = 472
+      Top = 80
+      Width = 140
       Height = 36
-      Caption = #28155#21152
+      Caption = #21333#20010#28155#21152
       Font.Charset = ANSI_CHARSET
       Font.Color = clAqua
       Font.Height = -35
       Font.Name = #31561#32447
       Font.Style = []
       ParentFont = False
-      OnClick = Label18Click
+      OnClick = SingleInsertClick
+    end
+    object MultipleInsert: TLabel
+      Left = 472
+      Top = 136
+      Width = 140
+      Height = 36
+      Caption = #22810#34892#28155#21152
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+      OnClick = MultipleInsertClick
+    end
+    object FullInsert: TLabel
+      Left = 480
+      Top = 344
+      Width = 140
+      Height = 36
+      Caption = #23436#25972#28155#21152
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object LabelTerm: TLabel
+      Left = 368
+      Top = 368
+      Width = 59
+      Height = 16
+      Caption = 'LabelTerm'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label1: TLabel
+      Left = 368
+      Top = 416
+      Width = 94
+      Height = 16
+      Caption = '(Part of Speech)'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label18: TLabel
+      Left = 368
+      Top = 464
+      Width = 53
+      Height = 16
+      Caption = 'Definition'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label20: TLabel
+      Left = 600
+      Top = 512
+      Width = 94
+      Height = 16
+      Caption = 'Model Sentence'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label21: TLabel
+      Left = 600
+      Top = 560
+      Width = 71
+      Height = 16
+      Caption = '(Translation)'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label6: TLabel
+      Left = 624
+      Top = 360
+      Width = 128
+      Height = 16
+      Caption = #23436#25972#28155#21152#26242#19981#21487#29992
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
     end
     object Edit1: TEdit
-      Left = 72
-      Top = 88
-      Width = 329
+      Left = 240
+      Top = 32
+      Width = 65
       Height = 35
       BorderStyle = bsNone
       Color = cl3DDkShadow
@@ -242,9 +390,9 @@ object Form1: TForm1
       OnClick = Edit1Click
     end
     object Edit2: TEdit
-      Left = 72
-      Top = 144
-      Width = 329
+      Left = 312
+      Top = 32
+      Width = 121
       Height = 35
       BorderStyle = bsNone
       Color = cl3DDkShadow
@@ -258,26 +406,161 @@ object Form1: TForm1
       Text = 'Definition'
     end
     object Memo1: TMemo
-      Left = 72
-      Top = 200
-      Width = 441
-      Height = 153
+      Left = 448
+      Top = 32
+      Width = 185
+      Height = 33
       BorderStyle = bsNone
       Color = cl3DDkShadow
-      Font.Charset = GB2312_CHARSET
+      Font.Charset = ANSI_CHARSET
       Font.Color = clAqua
       Font.Height = -21
-      Font.Name = #31561#32447
+      Font.Name = 'Arial'
       Font.Style = []
       Lines.Strings = (
         'Model sentence')
       ParentFont = False
       TabOrder = 2
     end
+    object TntTerm: TTntEdit
+      Left = 64
+      Top = 80
+      Width = 129
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      Text = 'Term'
+      OnClick = TntTermClick
+    end
+    object TNTList: TTntMemo
+      Left = 64
+      Top = 136
+      Width = 289
+      Height = 177
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      Lines.Strings = (
+        'Term1`(Definition1)'
+        'Term2`(Definition2)'
+        '...')
+      ParentFont = False
+      TabOrder = 5
+      WordWrap = False
+      OnClick = TNTListClick
+    end
+    object TntEdit2: TTntEdit
+      Left = 64
+      Top = 344
+      Width = 289
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 6
+      Text = 'Term'
+      OnClick = TntEdit2Click
+    end
+    object TntEdit3: TTntEdit
+      Left = 64
+      Top = 392
+      Width = 289
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 7
+      Text = 'Part of Speech'
+    end
+    object TntEdit4: TTntEdit
+      Left = 64
+      Top = 440
+      Width = 289
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 8
+      Text = 'Definition'
+    end
+    object TntEdit5: TTntEdit
+      Left = 64
+      Top = 488
+      Width = 521
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 9
+      Text = 'Model Sentence'
+    end
+    object TntEdit6: TTntEdit
+      Left = 64
+      Top = 536
+      Width = 521
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 10
+      Text = 'Translation'
+    end
+    object TntDef: TTntEdit
+      Left = 208
+      Top = 80
+      Width = 145
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+      Text = 'Definition'
+    end
   end
   object Panel3: TPanel
-    Left = 8
-    Top = 520
+    Left = 264
+    Top = 96
     Width = 153
     Height = 153
     Alignment = taLeftJustify
@@ -298,8 +581,8 @@ object Form1: TForm1
       Font.Style = []
       ParentFont = False
     end
-    object Label16: TLabel
-      Left = 666
+    object DeleteByIndex: TLabel
+      Left = 730
       Top = 392
       Width = 173
       Height = 36
@@ -311,10 +594,10 @@ object Form1: TForm1
       Font.Name = #31561#32447
       Font.Style = []
       ParentFont = False
-      OnClick = Label16Click
+      OnClick = DeleteByIndexClick
     end
     object Label17: TLabel
-      Left = 706
+      Left = 762
       Top = 448
       Width = 140
       Height = 36
@@ -327,8 +610,22 @@ object Form1: TForm1
       Font.Style = []
       ParentFont = False
     end
+    object RDBName: TLabel
+      Left = 258
+      Top = 48
+      Width = 18
+      Height = 16
+      Alignment = taCenter
+      Caption = 'DB'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
     object Edit4: TEdit
-      Left = 752
+      Left = 808
       Top = 336
       Width = 89
       Height = 35
@@ -343,25 +640,11 @@ object Form1: TForm1
       TabOrder = 0
       Text = 'Index'
     end
-    object Edit5: TEdit
-      Left = 368
-      Top = 24
-      Width = 145
-      Height = 27
-      Font.Charset = GB2312_CHARSET
-      Font.Color = clAqua
-      Font.Height = -19
-      Font.Name = #31561#32447
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      Text = 'Edit5'
-    end
     object StringGrid1: TStringGrid
       Left = 24
       Top = 96
-      Width = 625
-      Height = 409
+      Width = 641
+      Height = 425
       BorderStyle = bsNone
       Color = clGray
       ColCount = 3
@@ -375,21 +658,7 @@ object Form1: TForm1
       GridLineWidth = 2
       ParentFont = False
       ScrollBars = ssVertical
-      TabOrder = 2
-    end
-    object Edit6: TEdit
-      Left = 368
-      Top = 64
-      Width = 145
-      Height = 27
-      Font.Charset = GB2312_CHARSET
-      Font.Color = clAqua
-      Font.Height = -19
-      Font.Name = #31561#32447
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 3
-      Text = 'Edit6'
+      TabOrder = 1
     end
   end
   object Panel4: TPanel
@@ -449,18 +718,230 @@ object Form1: TForm1
       Text = '50'
     end
   end
+  object Panel5: TPanel
+    Left = 8
+    Top = 192
+    Width = 153
+    Height = 145
+    BevelOuter = bvNone
+    Color = clBackground
+    TabOrder = 4
+    object Label10: TLabel
+      Left = 72
+      Top = 32
+      Width = 140
+      Height = 36
+      Caption = #28155#21152#27880#37322
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label23: TLabel
+      Left = 712
+      Top = 464
+      Width = 70
+      Height = 36
+      Caption = #28155#21152
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -35
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label24: TLabel
+      Left = 360
+      Top = 168
+      Width = 59
+      Height = 16
+      Caption = 'LabelTerm'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label25: TLabel
+      Left = 360
+      Top = 336
+      Width = 94
+      Height = 16
+      Caption = '(Part of Speech)'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label26: TLabel
+      Left = 360
+      Top = 384
+      Width = 53
+      Height = 16
+      Caption = 'Definition'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label27: TLabel
+      Left = 592
+      Top = 432
+      Width = 94
+      Height = 16
+      Caption = 'Model Sentence'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label28: TLabel
+      Left = 592
+      Top = 480
+      Width = 71
+      Height = 16
+      Caption = '(Translation)'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label16: TLabel
+      Left = 168
+      Top = 112
+      Width = 73
+      Height = 14
+      Cursor = crDrag
+      Caption = #25353'J/K'#26469#21152'/'#20943
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clSilver
+      Font.Height = -13
+      Font.Name = #31561#32447
+      Font.Style = []
+      ParentFont = False
+    end
+    object TntEdit7: TTntEdit
+      Left = 56
+      Top = 144
+      Width = 289
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      Text = 'Term'
+      OnClick = TntEdit7Click
+    end
+    object TntEdit8: TTntEdit
+      Left = 56
+      Top = 312
+      Width = 289
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      Text = 'Part of Speech'
+    end
+    object TntEdit9: TTntEdit
+      Left = 56
+      Top = 360
+      Width = 289
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+      Text = 'Definition'
+    end
+    object TntEdit10: TTntEdit
+      Left = 56
+      Top = 408
+      Width = 521
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      Text = 'Model Sentence'
+    end
+    object TntEdit11: TTntEdit
+      Left = 56
+      Top = 456
+      Width = 521
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+      Text = 'Translation'
+    end
+    object TntEdit1: TTntEdit
+      Left = 56
+      Top = 88
+      Width = 105
+      Height = 41
+      BorderStyle = bsNone
+      Color = cl3DDkShadow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clAqua
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+      Text = 'TermID'
+      OnChange = TntEdit1Change
+      OnClick = TntEdit1Click
+      OnKeyPress = TntEdit1KeyPress
+    end
+  end
   object ZConnection1: TZConnection
     ControlsCodePage = cGET_ACP
     UTF8StringsAsWideField = False
     AutoEncodeStrings = False
-    Connected = True
     HostName = '127.0.0.1'
     Port = 3306
     Database = 'Terms'
     User = 'root'
     Password = 'sirisoak'
     Protocol = 'mysqld-5'
-    LibraryLocation = 'D:\DelphiLarry\00 Delphi Memo\libmysql_5.dll'
     Left = 8
     Top = 688
   end

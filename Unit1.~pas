@@ -6,21 +6,20 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, Menus, StdCtrls, ExtCtrls, ZAbstractConnection,
   ZConnection, DB, DBCtrls, Grids, DBGrids, ZAbstractRODataset,
-  ZAbstractDataset, ZAbstractTable, ZDataset, LarryLogging;
+  ZAbstractDataset, ZAbstractTable, ZDataset, LarryLogging, CurvyControls,
+  uhtmcombo, Lucombo, dblucomb, TntStdCtrls, TntGrids, TntDBGrids, SConvert;
 
 type
   TForm1 = class(TForm)
-    Label1: TLabel;
+    SaveAndExit: TLabel;
     Label2: TLabel;
     Panel1: TPanel;
     Label5: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    Label6: TLabel;
+    FormChooseTerm: TLabel;
     Label7: TLabel;
     Label8: TLabel;
-    Label9: TLabel;
-    Label10: TLabel;
     Panel2: TPanel;
     Label11: TLabel;
     Edit1: TEdit;
@@ -35,58 +34,101 @@ type
     ZConnection1: TZConnection;
     ZTable1: TZTable;
     DataSource1: TDataSource;
-    Label16: TLabel;
+    DeleteByIndex: TLabel;
     Label17: TLabel;
     ZQuery1: TZQuery;
-    Label18: TLabel;
+    SingleInsert: TLabel;
     Memo1: TMemo;
     Edit4: TEdit;
     ZQuery2: TZQuery;
     DataSource2: TDataSource;
-    Edit5: TEdit;
     StringGrid1: TStringGrid;
-    Edit6: TEdit;
     TermInfoOutput: TLabel;
     ErrorMessage: TLabel;
     Label19: TLabel;
+    TntTerm: TTntEdit;
+    TNTList: TTntMemo;
+    TntEdit2: TTntEdit;
+    MultipleInsert: TLabel;
+    TntEdit3: TTntEdit;
+    TntEdit4: TTntEdit;
+    TntEdit5: TTntEdit;
+    TntEdit6: TTntEdit;
+    FullInsert: TLabel;
+    LabelTerm: TLabel;
+    Label1: TLabel;
+    Label18: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    TntDef: TTntEdit;
+    Label6: TLabel;
+    TestDef: TTntLabel;
+    TestPos: TTntLabel;
+    TestSen: TTntLabel;
+    Label9: TLabel;
+    Panel5: TPanel;
+    Label10: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    TntEdit7: TTntEdit;
+    TntEdit8: TTntEdit;
+    TntEdit9: TTntEdit;
+    TntEdit10: TTntEdit;
+    TntEdit11: TTntEdit;
+    TntEdit1: TTntEdit;
+    Label16: TLabel;
+    RDBName: TLabel;
+    Label22: TLabel;
     procedure ExeSQL(input:WideString);
-    procedure InsertTerm(term:WideString;Defi:WideString;Sample:WideString);
-    procedure Exit1Click(Sender: TObject);
-    procedure Label1Click(Sender: TObject);
+
+    //procedure Exit1Click(Sender: TObject);
+    procedure SaveAndExitClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure HideAll();
     procedure Label2Click(Sender: TObject);
     procedure Label4Click(Sender: TObject);
-    procedure Label6Click(Sender: TObject);
+    procedure FormChooseTermClick(Sender: TObject);
     procedure Label7Click(Sender: TObject);
     procedure Label12Click(Sender: TObject);
     procedure ShowMainScreen();
-    procedure Label18Click(Sender: TObject);
+    procedure SingleInsertClick(Sender: TObject);
     procedure Edit1Click(Sender: TObject);
     procedure SyncGrid();
-    procedure Label16Click(Sender: TObject);
+    procedure DeleteByIndexClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     function getDailyNumber():String;
     procedure ShowDefinition();
     procedure HideDefinition();
     procedure Label5Click(Sender: TObject);
     procedure Label3Click(Sender: TObject);
     procedure Label19Click(Sender: TObject);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure MultipleInsertClick(Sender: TObject);
+    procedure TntTermClick(Sender: TObject);
+    procedure TNTListClick(Sender: TObject);
+    procedure TntEdit2Click(Sender: TObject);
+    procedure Label9Click(Sender: TObject);
+    procedure TntEdit7Click(Sender: TObject);
+    function SearchWord(Tid:Integer):WideString;
+    procedure TntEdit1Click(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure TntEdit1Change(Sender: TObject);
+    procedure TntEdit1KeyPress(Sender: TObject; var Key: Char);
+    function getDataBaseName():WideString;
+    procedure Label22Click(Sender: TObject);
   private
-    { Private declarations }
+    procedure InsertTerm(term:WideString;Defi:WideString;Sample:WideString);overload;
+    procedure InsertTerm(term:WideString);overload;
+    procedure InsertDef(term:WideString;PoS:WideString;Defi:WideString);
   public
     { Public declarations }
   end;
-
-  TermTemp = record//probably not using it
-    Word: WideString;
-    Date: WideString;
-    Level: Double;
-    Def: WideString;
-  end;
-
-   Term = record //declaring the node's data field
+  Term = record //declaring the node's data field
     ID:  Integer;
     Level: Integer;
   end;
@@ -99,34 +141,58 @@ type
 
 var
   Form1: TForm1;
-  Log: LarryLogging.TLog;
   Number: Integer;
   TermList: NodePointer;
+  DataBaseName: WideString;
+
 implementation
+
 
 {$R *.dfm}
 procedure TForm1.ShowDefinition();
 begin
-Label9.Visible:=True;
-Label10.Visible:=True;
+TestDef.Visible:=True;
+TestPos.Visible:=True;
+TestSen.Visible:=True;
 Label3.Visible:=True;
 Label5.Visible:=True;
 Label19.Visible:=False;
+if(TermList^.data.level =0) then
+Label22.Visible:=True;
 end;
 
 procedure TForm1.HideDefinition();
 begin
-
-Label9.Visible:=False;
-Label10.Visible:=False;
+TestDef.Visible:=False;
+TestPos.Visible:=False;
+TestSen.Visible:=False;
 Label3.Visible:=False;
 Label5.Visible:=False;
 Label19.Visible:=True;
+Label22.Visible:=False;
+end;
+
+procedure TForm1.HideAll();
+begin
+Panel1.Visible:=False;
+Panel2.Visible:=False;
+Panel3.Visible:=False;
+Panel4.Visible:=False;
+Panel5.Visible:=False;
 end;
 
 procedure sysout(sentence : String);
 begin
   Form1.TermInfoOutput.Caption := Form1.TermInfoOutput.Caption + #13 + sentence;
+end;
+
+
+procedure createNewList();//create form with null
+
+begin//var sampleList : NodePointer
+  //sampleList := NIL;
+  New(TermList);
+  TermList := NIL;
 end;
 
 procedure display();//sampleList: NodePointer
@@ -169,44 +235,72 @@ else
 Result:=0;
 end;
 
+
 function remove (nodeIndex : Integer): nodePointer;overload;
+
 //it's almost always going to be called by swap()
+
 //so assume index won't cause exceptions
+
 var
+
 prevNode : NodePointer;
+
 temp : NodePointer;
+
 isFound : boolean;
+
 i: Integer;
+
 begin
+
   Form1.ErrorMessage.Caption:=#13 + 'Removing Index ' + IntToStr(nodeIndex) + '...';
+
   Form1.ErrorMessage.Caption := Form1.ErrorMessage.Caption+#13+'Deleting instance found';
+
   if(nodeIndex=1) then //prevNode = NIL, so the first item is the string
+
     begin
+
     temp:=TermList;
+
     TermList:=TermList^.nextPointer;
+
     end
+
   else    //the item is somewhere in the linkedlist
+
     begin
+
     prevNode:=TermList;
+
     if prevNode = nil then exit;
+
     for i := 1 to nodeIndex-2 do
+
       begin
+
         prevNode:=prevNode^.nextPointer;
+
       end;
+
       temp := prevNode^.nextPointer;
+
       prevNode^.nextPointer := temp^.nextPointer;
+
       temp^.nextPointer:=NIL;
+
     end;
+
   display;
+
   Result:=temp;
+
 end;
 
-procedure createNewList();//create form with null
-begin//var sampleList : NodePointer
-  //sampleList := NIL;
-  New(TermList);
-  TermList := NIL;
-end;
+
+
+
 
 procedure add (newNode : NodePointer);overload;//var sampleList : NodePointer;
 var
@@ -231,6 +325,7 @@ begin
     end;//end of case where list is not empty
     display();
 end;//end of procedure add
+
 
 procedure add(index : Integer; newNode : NodePointer); overload;
 var
@@ -332,69 +427,28 @@ end;
 procedure addTerm(tid: integer;tlv: integer);
 var
 NewTerm:NodePointer;
-begin
-//-------
+begin 
 New(NewTerm);
 NewTerm^.data.ID:=tid;
 NewTerm^.data.Level:=tlv;
 Add(NewTerm);
 end;
 
-function WideToUTF8(const WS: WideString): UTF8String;
-var
-  len: integer;
-  us: UTF8String;
-begin
-  Result:='';
-  if (Length(WS) = 0) then
-    exit;
-  len:=WideCharToMultiByte(CP_UTF8, 0, PWideChar(WS), -1, nil, 0, nil, nil);
-  SetLength(us, len);
-  WideCharToMultiByte(CP_UTF8, 0, PWideChar(WS), -1, PChar(us), len, nil, nil);
-  Result:=us;
-end;
-
-function WideToAnsi(const WS: WideString): AnsiString;
-var len: integer;
-s: AnsiString;
-begin
-Result:='';
-if (Length(WS) = 0) then
-exit;
-len:=WideCharToMultiByte(CP_ACP, 0, PWideChar(WS), -1, nil, 0, nil, nil);
-SetLength(s, len);
-WideCharToMultiByte(CP_ACP, 0, PWideChar(WS), -1, PChar(s), len, nil, nil);
-Result:=s;
-end;
-
-function UTF8ToWide(const US: UTF8String): WideString;
-var
-  len: integer;
-  ws: WideString;
-begin
-  Result:='';
-  if (Length(US) = 0) then
-    exit;
-  len:=MultiByteToWideChar(CP_UTF8, 0, PChar(US), -1, nil, 0);
-  SetLength(ws, len);
-  MultiByteToWideChar(CP_UTF8, 0, PChar(US), -1, PWideChar(ws), len);
-  Result:=ws;
-end;
-
 procedure TForm1.SyncGrid();
 var
 i:integer;
+ID,T,D:WideString;
 begin
 i:=1;
 StringGrid1.RowCount := DataSource1.DataSet.RecordCount + 1;
- with DataSource1.DataSet do
+ with DataSource1.DataSet do 
   begin
     First;
     while not eof do
     begin
-      StringGrid1.Cells[0,i] := UTF8ToWide(FieldByName('TermID').AsString);
-      StringGrid1.Cells[1,i] := UTF8ToWide(FieldByName('Term').AsString);
-      StringGrid1.Cells[2,i] := UTF8ToWide(FieldByName('Definition').AsString);
+      StringGrid1.Cells[0,i] := UTF8ToWide(UTF8String(FieldByName('TermID').AsString));
+      StringGrid1.Cells[1,i] := UTF8ToWide(UTF8String(FieldByName('Term').AsString));
+      StringGrid1.Cells[2,i] := UTF8ToWide(UTF8String(FieldByName('Definition').AsString));
       next;
       i:=i+1;
     end;
@@ -405,59 +459,76 @@ procedure TForm1.ExeSQL(input:WideString);
 begin
   ZQuery1.Close;
   ZQuery1.SQL.Text:=WideToUTF8(input);
+  //ZQuery1.SQL.Text:=input;
   ZQuery1.ExecSQL;
 end;
 
-procedure TForm1.InsertTerm(term:WideString;Defi:WideString;Sample:WideString);
+procedure TForm1.InsertTerm(term:WideString;Defi:WideString;Sample:WideString); //not using it anymore
+var Input:WideString;
+begin Try ZConnection1.StartTransaction;Try Input:='Insert Into termslistdefault(Term,Definition,SampleSentence) VALUES(''' + term + ''',''' + Defi + ''',''' + Sample + ''');';ExeSQL(Input);ZConnection1.Commit;
+  Except ZConnection1.Rollback;ShowMessage('Insert Term Failed.');end;Finally end;
+end;
+
+procedure TForm1.InsertTerm(term:WideString);
 var
-Input:WideString;
+T:WideString;
 begin
 Try
+  //T:=//----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  ----  
   ZConnection1.StartTransaction;
   Try
-    Input:='Insert Into termslistdefault(Term,Definition,SampleSentence) VALUES(''' + term + ''',''' + Defi + ''',''' + Sample + ''');';
-    ExeSQL(Input);
+    ExeSQL('INSERT INTO termslist ( Term, DateInsert ) VALUES( '''+term+''', CURRENT_DATE );');
     ZConnection1.Commit;
   Except
     ZConnection1.Rollback;
-    ShowMessage('Insert Term Failed.');
+    ShowMessage('Insert Term: '+term+' Failed.');
   end;
 Finally
   //ZConnection1.AutoCommit:=True;
 end;
 end;
 
-procedure TForm1.HideAll();
-begin
-Panel1.Visible:=False;
-Panel2.Visible:=False;
-Panel3.Visible:=False;
-Panel4.Visible:=False;
+procedure TForm1.InsertDef(term:WideString;PoS:WideString;Defi:WideString);
+begin Try
+ZConnection1.StartTransaction;
+  Try
+    ExeSQL('INSERT INTO definitionlist ( TermID, PartOfSpeech, Definition ) (SELECT TermID, '''+PoS+''', '''+Defi+''' FROM termslist WHERE termslist.term = '''+term+''');');
+    ZConnection1.Commit;
+  Except
+    ZConnection1.Rollback;
+    ShowMessage('Insert Definition: ' + Defi + ' Failed.');
+  end;
+Finally end;
 end;
+
+
 
 procedure TForm1.ShowMainScreen();  //hide everything except for review page
 begin
-HideAll();
-Panel1.Left:= 72;Panel1.Top:= 24;Panel1.Width:= 920;Panel1.Height:= 500;Panel1.Visible:=True;
+HideAll();Panel1.Left:= 72;Panel1.Top:= 24;Panel1.Width:= 960;Panel1.Height:= 500;
+Panel1.Visible:=True; TestDef.Caption:='';TestPos.Caption:='';TestSen.Caption:='';
 if(TermList<>NIL) then
 begin;
 //ShowMessage('Termlist not nil');
 Try
   ZConnection1.StartTransaction;
-  Try
-    //------------------------------------------
-    ZQuery1.Close;
-    ZQuery1.SQL.Text:= 'SELECT TermID, Term, Definition,SampleSentence FROM termslistdefault WHERE  TermID =' + IntToStr(TermList^.data.ID);
-    //---------
+  Try ZQuery1.Close;
+    //ZQuery1.SQL.Text:= 'SELECT TermID, Term, Definition,SampleSentence FROM termslistdefault WHERE  TermID =' + IntToStr(TermList^.data.ID);
+    ZQuery1.SQL.Text:= 'SELECT Term FROM termslist WHERE  TermID =' + IntToStr(TermList^.data.ID);
     ZQuery1.Active:=True;
+    //ExeSQL('SELECT Term FROM termslist WHERE  TermID =' + IntToStr(TermList^.data.ID));
+    Label8.Caption := UTF8ToWide(DataSource1.DataSet.FieldByName('Term').AsString);
+    ZQuery1.SQL.Text:= '	SELECT * FROM definitionlist WHERE  TermID =' + IntToStr(TermList^.data.ID);ZQuery1.Active:=True;
+    with DataSource1.DataSet do begin First;while not eof do begin
+    TestDef.Caption :=TestDef.Caption + UTF8ToWide(UTF8String(FieldByName('Definition').AsString+ #13#10));  //'[' + UTF8ToWide(UTF8String(FieldByName('PartOfSpeech').AsString)) + '] ' +
+    TestPos.Caption :=TestPos.Caption + UTF8ToWide('[' + UTF8String(FieldByName('PartOfSpeech').AsString + ']' + #13#10));
+    next;end;end;
+    ZQuery1.SQL.Text:= '	SELECT * FROM modellist WHERE  TermID =' + IntToStr(TermList^.data.ID);ZQuery1.Active:=True;
+    with DataSource1.DataSet do begin First;while not eof do begin
+    TestSen.Caption :=TestSen.Caption + UTF8ToWide(UTF8String(FieldByName('Sentence').AsString+ #13#10));
+    TestSen.Caption :=TestSen.Caption + UTF8ToWide(UTF8String(FieldByName('Translation').AsString+ #13#10#13#10));
+    next;end;end;
     ZConnection1.Commit;
-    with DataSource1.DataSet do
-      begin
-      Label8.Caption := UTF8ToWide(FieldByName('Term').AsString);
-      Label9.Caption := UTF8ToWide(FieldByName('Definition').AsString);
-      Label10.Caption := UTF8ToWide(FieldByName('SampleSentence').AsString);
-      end;
-    //ZConnection1.Commit;
   Except
     ZConnection1.Rollback;
     ShowMessage('Exception caught. Application terminating.');
@@ -488,23 +559,38 @@ StrLst.Free;
 result:=number;
 end;
 
+function TForm1.getDataBaseName():WideString;
+var
+StrLst:TStringList;
+name:String;
+begin
+StrLst:=TStringList.Create;
+StrLst.LoadFromFile('DataBaseName.txt');
+name:=UTF8ToWide(StrLst[StrLst.Count-1]);
+StrLst.Free;
+result:=name;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 var
   FileHandle: Integer;
   I: Integer;
 begin
-Edit3.Text:=getDailyNumber;
-Number:=StrToInt(Edit3.Text);
+//DataBaseName:='termsUser';
+DataBaseName:=getDataBaseName();
+RDBName.Caption:=DataBaseName;
+ZConnection1.LibraryLocation:=ExtractFilePath(Application.ExeName)+'libmysql_5.dll';
+Edit3.Text:=getDailyNumber; Number:=StrToInt(Edit3.Text);
 //ShowMessage(getDailyNumber);
 //Log:=LarryLogging.TLog.Create('DailyNumber.log');
 {先准备好MySQL连接 以防出现任何库/表缺失等错误}
 Try
   ZConnection1.StartTransaction;
   Try
-    ExeSQL('SET NAMES UTF8');
-    ExeSQL('CREATE DATABASE IF NOT EXISTS termsDefault DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;');
+    ExeSQL('SET NAMES utf8mb4');  //-------------------------------------------------------------
+    ExeSQL('CREATE DATABASE IF NOT EXISTS ' +DataBaseName+ ' DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;');
     //没有termsDefault 就新建她
-    ExeSQL('USE termsDefault;');
+    ExeSQL('USE ' + DataBaseName );
     //USE test_db; 选定库
     ExeSQL('CREATE TABLE IF NOT EXISTS `termsListDefault` ('+
   '`TermID` int(11) NOT NULL AUTO_INCREMENT,'+
@@ -516,7 +602,13 @@ Try
   '`level` int(11) DEFAULT ''0'','+
   'PRIMARY KEY (`TermID`)'+
 ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;');
-    //没有terms list表就新建她
+    ExeSQL('CREATE TABLE IF NOT EXISTS `termslist` ('
+		+'`TermID` INT ( 11 ) NOT NULL AUTO_INCREMENT,`Term` VARCHAR ( 20 ) COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,`DateInsert` date NOT NULL,`DateRecite` date NOT NULL,`level` INT ( 11 ) DEFAULT ''0'','
+		+'PRIMARY KEY ( `TermID`)) ENGINE = INNODB AUTO_INCREMENT = 16 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;');
+    ExeSQL('CREATE TABLE IF NOT EXISTS `definitionlist` (`TermID` INT ( 11 ) NOT NULL,`PartOfSpeech` VARCHAR ( 20 ) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`Definition` VARCHAR ( 255 ) COLLATE utf8mb4_unicode_ci NOT NULL,'
+    +'FOREIGN KEY ( `TermID` ) REFERENCES termslist ( `TermID` ) ) ENGINE = INNODB AUTO_INCREMENT = 16 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;');
+    ExeSQL('CREATE TABLE IF NOT EXISTS `modellist` (`TermID` INT ( 11 ) NOT NULL,`Sentence` VARCHAR ( 255 ) COLLATE utf8mb4_unicode_ci NOT NULL,`Translation` VARCHAR ( 255 ) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
+    +'FOREIGN KEY ( `TermID` ) REFERENCES termslist ( `TermID` ) ) ENGINE = INNODB AUTO_INCREMENT = 16 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;');
     ZConnection1.Commit;
   Except
     ZConnection1.Rollback;
@@ -526,18 +618,16 @@ Try
 Finally
   //ZConnection1.AutoCommit:=True;
 end;
-  Form1.Width:=1080;
-  Form1.Height:=750;//尺寸为750*1080
+  Form1.Width:=1080;Form1.Height:=750;//尺寸为750*1080
   Form1.Color:=clBlack; //设置背景为黑色， 默认灰色是为了方便开发
-  Label1.Top:=648;Label2.Top:=648;Label4.Top:=648;Label6.Top:=648;Label7.Top:=648;
-
+  SaveAndExit.Top:=648;Label2.Top:=648;Label4.Top:=648;FormChooseTerm.Top:=648;Label7.Top:=648;Label9.Top:=648;
 
 Try//现在设置背诵单词的数组
   ZConnection1.StartTransaction;
   Try
     //ExeSQL('SELECT * FROM termslistdefault where DATEDIFF(DateRecite,CURRENT_DATE)<1'); //现在可以使用当天需要被的单词了
     ZQuery1.Close;
-    ZQuery1.SQL.Text:= 'SELECT * FROM termslistdefault where DATEDIFF(DateRecite,CURRENT_DATE)<1';
+    ZQuery1.SQL.Text:= 'SELECT * FROM termslist where DATEDIFF(DateRecite,CURRENT_DATE)<1';
     ZQuery1.Active:=True;
 
     ZConnection1.Commit;
@@ -546,15 +636,10 @@ Try//现在设置背诵单词的数组
       begin
       First;
       while not eof do
-        begin{
-        New(NewTerm);
-        NewTerm^.data.ID:=StrToInt(UTF8ToWide(FieldByName('TermID').AsString));
-        NewTerm^.data.Level:=StrToInt(UTF8ToWide(FieldByName('Level').AsString));
-        Add(NewTerm);  }
+        begin
         AddTerm(StrToInt(UTF8ToWide(FieldByName('TermID').AsString)),  StrToInt(UTF8ToWide(FieldByName('Level').AsString)));
         next;
         end;
-    //First;
       end;
 
   Except
@@ -571,13 +656,15 @@ end;
     ShowMainScreen();//打开主界面
 end;
 
-procedure TForm1.Exit1Click(Sender: TObject);
+procedure TForm1.SaveAndExitClick(Sender: TObject);//释放内存 关闭程序
+var prevNode:NodePointer;
 begin
-Application.Terminate;
+while (TermList<>NIL) do
+begin
+prevNode:=TermList;
+TermList:=TermList^.nextPointer;dispose(prevNode);
 end;
 
-procedure TForm1.Label1Click(Sender: TObject);
-begin
 Application.Terminate;
 end;
 
@@ -586,32 +673,24 @@ begin
 ShowMainScreen();
 end;
 
-procedure TForm1.Label4Click(Sender: TObject);
+procedure TForm1.Label4Click(Sender: TObject);  //录入单词
 begin
-HideAll();
-Panel2.Left:= 72;Panel2.Top:= 24;Panel2.Width:= 920;Panel2.Height:= 500;Panel2.Visible:=True;
+HideAll();Edit1.Visible:=False;Edit2.Visible:=False;Memo1.Visible:=False;Panel2.Left:= 72;Panel2.Top:= 24;Panel2.Width:= 920;Panel2.Height:= 600;Panel2.Visible:=True;Panel2.BorderStyle:=bsNone;
+LabelTerm.Visible:=False;Label1.Visible:=False;Label18.Visible:=False;Label20.Visible:=False;Label21.Visible:=False;
 end;
 
-procedure TForm1.Label6Click(Sender: TObject);//select words
+procedure TForm1.FormChooseTermClick(Sender: TObject);//select words
 begin
-HideAll();
-Panel3.Left:= 72;Panel3.Top:= 24;Panel3.Width:= 920;Panel3.Height:= 500;Panel3.Visible:=True;
-//ZQuery1.SQL
+HideAll();Panel3.Left:= 72;Panel3.Top:= 24;Panel3.Width:= 940;Panel3.Height:= 500;Panel3.Visible:=True;
+
 Try
   ZConnection1.StartTransaction;
   Try
     //ExeSQL('SELECT TermID, SELECT TermID, Term, Definition  FROM termslistdefault;');
-    ZQuery1.Close;
-    ZQuery1.SQL.Text:= 'SELECT TermID, Term, Definition  FROM termslistdefault;';
-    ZQuery1.Active:=True;
-    ZConnection1.Commit;
-
-    //Edit5.Text:=UTF8ToWide(DBGrid1.DataSource.DataSet.FieldByName('Term').AsString);
-    //DBGrid1.Visible:=False;
-    //StringGrid1.Height:=280;
-    Edit5.Visible:=False;
-    Edit6.Visible:=False;
-    Label17.Visible:=False;
+    //ZQuery1.Close;ZQuery1.SQL.Text:= 'SELECT TermID, Term, Definition  FROM termslistdefault;';ZQuery1.Active:=True;ZConnection1.Commit;
+    ZQuery1.Close;ZQuery1.SQL.Text:= 'SELECT t.TermID,t.Term,d.Definition FROM termslist t LEFT JOIN definitionlist d on t.termID = d.TermID ORDER BY TermID;';
+    ZQuery1.Active:=True;ZConnection1.Commit;
+   Label17.Visible:=False;
     SyncGrid();
   Except
     ZConnection1.Rollback;
@@ -629,6 +708,13 @@ Panel4.Left:= 72;Panel4.Top:= 24;Panel4.Width:= 920;Panel4.Height:= 500;Panel4.V
 Edit3.setfocus();
 end;
 
+procedure TForm1.Label9Click(Sender: TObject);
+begin
+HideAll();Edit1.Visible:=False;Edit2.Visible:=False;Memo1.Visible:=False;
+Panel5.Left:= 72;Panel5.Top:= 24;Panel5.Width:= 920;Panel5.Height:= 600;Panel5.Visible:=True;Panel5.BorderStyle:=bsNone;
+//LabelTerm.Visible:=False;Label1.Visible:=False;Label18.Visible:=False;Label20.Visible:=False;Label21.Visible:=False;
+
+end;
 
 procedure TForm1.Label12Click(Sender: TObject);
 var
@@ -638,10 +724,6 @@ F:TextFile;
 j:LongInt;
 i: integer;
 begin
-//Log.AddLog(Edit3.Text);
-//FileHandle := FileCreate('DailyNumber.log');
-{ Write out the number daily recite terms. }
-//FileWrite(FileHandle , Edit3.Text , SizeOf(Edit3.Text) );
 S := Edit3.Text;
 if TryStrToInt(Edit3.Text,j) AND (StrToInt(Edit3.Text)>0) then
 begin
@@ -656,7 +738,8 @@ Try//现在设置背诵新增单词的数组
   ZConnection1.StartTransaction;
   Try
     ZQuery1.Close;
-    ZQuery1.SQL.Text:= 'SELECT * FROM termslistdefault WHERE LEVEL = 0;';
+    //ZQuery1.SQL.Text:= 'SELECT * FROM termslistdefault WHERE LEVEL = 0;';
+    ZQuery1.SQL.Text:='SELECT * FROM termslist WHERE LEVEL = 0;';
     ZQuery1.Active:=True;
 
     ZConnection1.Commit;
@@ -682,7 +765,7 @@ end;
     shuffle();//打乱单词顺序
     While(getLength>StrToInt(Edit3.Text))do
     begin
-    remove(1);
+    Dispose(remove(1));
     end;
     display();//显示单词列表
     HideDefinition();//隐藏单词解释
@@ -695,11 +778,20 @@ else
 end;
 
 
-procedure TForm1.Label18Click(Sender: TObject);
-begin
-  InsertTerm(Edit1.Text,Edit2.Text,Memo1.Lines.Text);
-  Label18.Caption:='录入成功';
-  //tcaption
+procedure TForm1.SingleInsertClick(Sender: TObject);
+var
+T,D:WideString;
+begin{InsertTerm(Edit1.Text,Edit2.Text,Memo1.Lines.Text);}
+  T:=ReplaceFull(TntTerm.Text);
+  D:=ReplaceFull(TntDef.Text);
+  If(T<>'')then
+  begin
+  InsertTerm(T); //StringReplace(TNTList.Lines.Strings[i],' ','$',[rfReplaceAll])// TntTerm.Text
+  //If(D<>'') then begin InsertDef(D,'',T);  ShowMessage('Adding Definition'); end;
+  InsertDef(T,'',D);
+  SingleInsert.Caption:='录入成功';
+  TntTerm.Text:='';TntDef.Text:='';
+  end;
 end;
 
 procedure TForm1.Edit1Click(Sender: TObject);
@@ -707,21 +799,26 @@ begin
 Edit1.Text:='';
 Edit2.Text:='';
 Memo1.Text:='';
-Label18.Caption:='添加';
+SingleInsert.Caption:='添加';
 end;
 
-procedure TForm1.Label16Click(Sender: TObject);
+procedure TForm1.DeleteByIndexClick(Sender: TObject);
 var
 index:Integer;
 begin
 Try
   ZConnection1.StartTransaction;
-  ExeSQL('DELETE FROM termslistdefault WHERE TermID = ' + Edit4.Text + ';');
-
+  //ExeSQL('DELETE FROM termslistdefault WHERE TermID = ' + Edit4.Text + ';');
+  ExeSQL('delete from definitionlist WHERE TermID = ' + Edit4.Text + ';');
+  ExeSQL('delete from modellist WHERE TermID = ' + Edit4.Text + ';');
+  ExeSQL('delete from termslist WHERE TermID = ' + Edit4.Text + ';');
   //ZConnection1.Commit;
-
+  {delete from termslist WHERE TermID =20
+	delete from model WHERE TermID =20
+	delete from termslist WHERE TermID = 20}
   ZQuery1.Close;
-  ZQuery1.SQL.Text:= 'SELECT TermID, Term, Definition  FROM termslistdefault;';
+  //ZQuery1.SQL.Text:= 'SELECT TermID, Term, Definition  FROM termslistdefault;';
+  ZQuery1.SQL.Text:='SELECT t.TermID,t.Term,d.Definition FROM termslist t LEFT JOIN definitionlist d on t.termID = d.TermID ORDER BY TermID;';
   ZQuery1.Active:=True;
   ZConnection1.Commit;
   SyncGrid();
@@ -736,11 +833,14 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
 //Log.Destroy;
+//ZConnection1.free;
+ZTable1.Free;
+DataSource1.Free;
+ZQuery1.Free;
+ZConnection1.Free;
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
-begin;
-end;
+
 
 procedure TForm1.Label5Click(Sender: TObject); //背出来了
 var
@@ -750,6 +850,7 @@ Interval:Integer;
 begin
 HideDefinition();
 if(TermList<>NIL) then
+  //ShowMessage('termlist level is: '+ inttostr(TermList^.data.Level));
   begin
   case TermList^.data.Level of
     0: index:=4;
@@ -759,45 +860,18 @@ if(TermList<>NIL) then
     end;
     if(index=0)then
     begin
-      //------
-    Case TermList^.data.Level of
-      0: Interval:=1;
-      1: Interval:=1;
-      2: Interval:=1;
-      3: Interval:=1;
-      4: Interval:=2;
-      5: Interval:=4;
-      6: Interval:=7;
-      7: Interval:=15;
-    ELSE Interval:=30;
-    end;
+    Case TermList^.data.Level of 0: Interval:=1;1: Interval:=1;2: Interval:=1;3:
+    Interval:=1;4: Interval:=2;5: Interval:=4;6: Interval:=7;7: Interval:=15;
+    ELSE Interval:=30; end;
       Try
         ZConnection1.StartTransaction;
-       {ShowMessage('Update termslistdefault set level = ' + IntToStr(TermList^.data.Level) +
-        ' WHERE TermID = ' + IntToStr(tid) + ';');
-        ExeSQL('Update termslistdefault set level = ' + IntToStr(TermList^.data.Level) +
-        ' WHERE TermID = ' + IntToStr(tid) + ';');
-        ExeSQL(' Update termslistdefault set DateRecite = DATE_ADD(CURRENT_DATE,INTERVAL( ' +
-          ' CASE level ' +
-	          ' WHEN 0 then 1 ' +
-	          ' WHEN 1 then 1 ' +
-	          ' WHEN 2 then 1 ' +
-	          ' WHEN 3 then 1 ' +
-	          ' WHEN 4 then 2 ' +
-	          ' WHEN 5 then 4 ' +
-	          ' WHEN 6 then 7 ' +
-	          ' WHEN 7 then 15 ' +
-	          ' ELSE 30 end ) day ) ' +
-          ' Where TermID = 17 ' + IntToStr(tid));}
-          ExeSQL('UPDATE termslistdefault SET LEVEL = ' + IntToStr(TermList^.data.Level) +
+          ExeSQL('UPDATE termslist SET LEVEL = ' + IntToStr(TermList^.data.Level) +
           ', DateRecite = DATE_ADD( CURRENT_DATE, INTERVAL ( ' + IntToStr(Interval) +
           ' ) DAY ) WHERE TermID = ' + IntToStr(TermList^.data.ID));
         ZConnection1.Commit;
       Except
-        ZConnection1.Rollback;
-        ShowMessage('Cannot update the next recite date of the term.');
-      end;
-      Remove(1);
+        ZConnection1.Rollback;ShowMessage('Cannot update the next recite date of the term.');
+      end;Remove(1);
     end
     else
       begin
@@ -811,6 +885,33 @@ if(TermList<>NIL) then
   ShowMainScreen();
 end;
 
+function LTD(level:integer):integer;
+var day:Integer;
+begin
+Case level of 0: day:=1;1: day:=1;2: day:=1;3:
+    day:=1;4: day:=2;5: day:=4;6: day:=7;7: day:=15;
+    ELSE day:=30;
+Result:=day;
+end;
+end;
+
+procedure TForm1.Label22Click(Sender: TObject);
+begin
+HideDefinition();
+  Try
+    ZConnection1.StartTransaction;
+    ExeSQL('UPDATE termslist SET LEVEL = 9'+
+    ', DateRecite = DATE_ADD( CURRENT_DATE, INTERVAL ( 30'+
+    ' ) DAY ) WHERE TermID = ' + IntToStr(TermList^.data.ID));
+    ZConnection1.Commit;
+  Except
+    ZConnection1.Rollback;
+    ShowMessage('Cannot update the next recite date of the term.');
+  end;
+Dispose(Remove(1));
+ShowMainScreen();
+end;
+
 procedure TForm1.Label3Click(Sender: TObject); //没背出来  
 var
 newTerm:NodePointer;
@@ -818,10 +919,16 @@ begin
 HideDefinition();
 if(TermList<>NIL)then
   begin
+   Try ZConnection1.StartTransaction;
+   ExeSQL('UPDATE termslist SET LEVEL = ' + IntToStr(TermList^.data.Level) +
+          ', DateRecite = DATE_ADD( CURRENT_DATE, INTERVAL ( 1 ) DAY ) WHERE TermID = ' + IntToStr(TermList^.data.ID));
+   ZConnection1.Commit;
+   Except ZConnection1.Rollback;ShowMessage('Cannot update the next recite date of the term.');
+   end;
     New(NewTerm);
     NewTerm^.data.ID:=TermList^.data.ID;
     NewTerm^.data.Level:=0;
-    Remove(1);//移除
+    Dispose(Remove(1));//移除
     Add(4,NewTerm);
   end;
 ShowMainScreen();
@@ -831,5 +938,135 @@ procedure TForm1.Label19Click(Sender: TObject); //显示单词意思
 begin
 ShowDefinition();
 end;
+
+procedure TForm1.FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+begin ReleaseCapture;Perform(WM_SYSCOMMAND, $F017 , 0);end; //使窗口可以拖动
+
+procedure TForm1.MultipleInsertClick(Sender: TObject);
+var
+i:Integer;
+strs: TStrings;
+Defi: WideString;
+Word: WideString;
+begin
+for i := 0 to TNTList.Lines.Count-1 do
+  if(TNTList.Lines.Strings[i]<>'')then
+  begin
+  strs:=TStringList.Create;
+  strs.Delimiter:='`';
+  strs.DelimitedText:= StringReplace(TNTList.Lines.Strings[i],' ','$',[rfReplaceAll]);
+  Word:= ReplaceFull(StringReplace(strs[0],'$',' ',[rfReplaceAll]));
+  Defi:= ReplaceFull(StringReplace(strs[1],'$',' ',[rfReplaceAll]));
+  InsertTerm(Word);
+  //ShowMessage(Word);
+  //ShowMessage(Defi);
+  if(Defi<>'')then InsertDef(Word,'',Defi);
+  strs.Destroy;
+  end;
+ShowMessage('Muti-insert Successful');
+MultipleInsert.Caption:='添加成功';
+TNTList.Clear;
+end;
+
+{
+   strs := TStringList.Create;
+   strs.Delimiter:='`';
+   strs.DelimitedText := StringReplace(TNTList.Lines.Strings[i],' ','$',[rfReplaceAll]);
+   Label1.Caption:=StringReplace(strs[0],'$',' ',[rfReplaceAll]);
+   Label2.Caption:=StringReplace(strs[1],'$',' ',[rfReplaceAll]);
+}
+
+procedure TForm1.TntTermClick(Sender: TObject);
+begin
+SingleInsert.Caption:='单个添加';MultipleInsert.Caption:='多行添加';FullInsert.Caption:='完整添加';
+TntTerm.Text:='';TntDef.Text:='';
+end;
+
+procedure TForm1.TNTListClick(Sender: TObject);
+begin
+SingleInsert.Caption:='单个添加';MultipleInsert.Caption:='多行添加';FullInsert.Caption:='完整添加';
+TNTList.Clear;
+end;
+
+procedure TForm1.TntEdit2Click(Sender: TObject);
+begin
+SingleInsert.Caption:='单个添加';MultipleInsert.Caption:='多行添加';FullInsert.Caption:='完整添加';
+TntEdit2.Text:='';TntEdit3.Text:='';TntEdit4.Text:='';TntEdit5.Text:='';TntEdit6.Text:='';
+LabelTerm.Visible:=True;Label1.Visible:=True;Label18.Visible:=True;Label20.Visible:=True;Label21.Visible:=True;
+end;
+
+
+
+procedure TForm1.TntEdit7Click(Sender: TObject);
+begin
+TnTEdit7.Text:='';
+TntEdit8.Text:='';
+TntEdit9.Text:='';
+TntEdit10.Text:='';
+TntEdit11.Text:='';
+end;
+
+function TForm1.SearchWord(Tid:Integer):WideString;
+var
+TargetTerm:WideString;
+  begin
+  
+   ZConnection1.StartTransaction;
+   Try
+   ExeSQL('Select * From Termslist WHERE TermID = ' + IntToStr(Tid)+';');
+   ZQuery1.Active:=True;
+   TargetTerm := UTF8ToWide(UTF8String(DataSource1.DataSet.FieldByName('Term').AsString));
+   ZConnection1.Commit;
+   Result:=TargetTerm;
+   Except ZConnection1.Rollback;ShowMessage('Cannot find the term with id: '+ IntToStr(Tid));
+   Result:='N/A';
+   end;
+end;
+
+procedure TForm1.TntEdit1Click(Sender: TObject);
+var j:LongInt;
+begin
+if TryStrToInt(TntEdit1.Text,j) AND (StrToInt(TntEdit1.Text)>0 )then
+begin end
+else
+TntEdit1.Text:='';
+end;
+
+procedure TForm1.FormKeyPress(Sender: TObject; var Key: Char);
+var
+j:LongInt;
+begin
+
+end;
+
+procedure TForm1.TntEdit1Change(Sender: TObject);
+var
+j:LongInt;
+begin
+if TryStrToInt(TntEdit1.Text,j) AND (StrToInt(TntEdit1.Text)>0) then
+TntEdit7.Text:=SearchWord(StrToInt(TntEdit1.Text))
+end;
+
+procedure TForm1.TntEdit1KeyPress(Sender: TObject; var Key: Char);
+var
+j:LongInt;
+begin
+if TryStrToInt(TntEdit1.Text,j) AND (StrToInt(TntEdit1.Text)>0 )then
+  if(Key = 'k')then
+    begin
+    Key:=#0;
+    TntEdit1.Text:=IntToStr(StrToInt(TntEdit1.Text)+1);
+    TntEdit7.Text:=SearchWord(StrToInt(TntEdit1.Text));
+    end
+  else if(Key = 'j')then
+    begin
+    Key:=#0;
+    TntEdit1.Text:=IntToStr(StrToInt(TntEdit1.Text)-1);
+    TntEdit7.Text:=SearchWord(StrToInt(TntEdit1.Text));
+    end;
+end;
+
+
+
 
 end.
